@@ -2,106 +2,112 @@
 import pandas as pd
 import numpy as np
 
+
 class HWDigitRecognizer:
 
-  def __init__(self, train_filename, test_filename):
-    """El método init leerá los datasets con extensión ".csv" cuyas ubicaciones son recibidas mediante 
-    los paramentros <train_filename> y <test_filename>. Los usará para crear las matrices de X_train, 
-    X_test, Y_train y Y_test con las dimensiones adecuadas y normalización de acuerdo a lo definido en 
-    clase para un problema de clasificación multiclase resuelto media una única red neuronal.
-    """
+    def __init__(self, train_filename, test_filename):
+        """El método init leerá los datasets con extensión ".csv" cuyas ubicaciones son recibidas mediante 
+        los paramentros <train_filename> y <test_filename>. Los usará para crear las matrices de X_train, 
+        X_test, Y_train y Y_test con las dimensiones adecuadas y normalización de acuerdo a lo definido en 
+        clase para un problema de clasificación multiclase resuelto media una única red neuronal.
+        """
 
-    testData = pd.read_csv(test_filename)
-    trainData = pd.read_csv(train_filename)
+        testData = pd.read_csv(test_filename)
+        trainData = pd.read_csv(train_filename)
 
-    y_train_len = len(trainData.label)
-    y_test_len = len(testData.label)
+        y_train_len = len(trainData.label)
+        y_test_len = len(testData.label)
 
-    y_train = (trainData.label.to_numpy()).reshape(1, y_train_len)
-    y_test = (testData.label.to_numpy()).reshape(1, y_test_len)
+        y_train = (trainData.label.to_numpy()).reshape(1, y_train_len)
+        y_test = (testData.label.to_numpy()).reshape(1, y_test_len)
 
-    x_train = trainData.drop('label', axis=1).to_numpy().T
-    x_test = testData.drop('label', axis=1).to_numpy().T
+        x_train = trainData.drop('label', axis=1).to_numpy().T
+        x_test = testData.drop('label', axis=1).to_numpy().T
 
-    self.X_train = x_train/255
-    self.X_test = x_test/255
-    self.Y_train = y_train
-    self.Y_test = y_test
+        self.X_train = x_train/255
+        self.X_test = x_test/255
+        self.Y_train = y_train
+        self.Y_test = y_test
 
-    pass
-    
-  def train_model(self):
-    """
-    Entrena complementamente una red neuronal con múltiples capas, utilizando la función de 
-    activación RELU en las primeras L-1 capas y la función Softmax en la última capa de tamaño 10
-    para realizar clasificación multiclase. 
+        print("*****************")
+        print(np.shape(y_train))
+        print("*****************")
+        print(np.shape(y_test))
 
-    Retorna una tupla cuyo primer elemento es un diccionario que contiene los parámetros W y b de todas 
-    las capas del modelo con esta estructura:
+        pass
 
-    { "W1": ?, "b1": ?, ... , "WL": ?, "bL": ?}
+    def train_model(self):
+        """
+        Entrena complementamente una red neuronal con múltiples capas, utilizando la función de 
+        activación RELU en las primeras L-1 capas y la función Softmax en la última capa de tamaño 10
+        para realizar clasificación multiclase. 
 
-    donde los signos <?> son sustituidos por arreglos de numpy con los valores respectivos. El valor de 
-    L será elegido por el estudiante mediante experimentación. El segundo elemento a retornar es una 
-    lista con los costos obtenidos durante el entrenamiento cada 100 iteraciones.
+        Retorna una tupla cuyo primer elemento es un diccionario que contiene los parámetros W y b de todas 
+        las capas del modelo con esta estructura:
 
-    Por razones de eficiencia el autograder revisará su programa usando un dataset más pequeño que el 
-    que se proporciona (usted puede hacer lo mismo para sus pruebas iniciales). Pero una vez entregado 
-    su proyecto se harán pruebas con el dataset completo, por lo que el diccionario que retorna este 
-    método con los resultados del entrenamiento con una precisión mayor al 95% en los datos de prueba 
-    debe ser entregado junto con este archivo completado.
+        { "W1": ?, "b1": ?, ... , "WL": ?, "bL": ?}
 
-    Para entregar dicho diccionario deberá guardarlo como un archivo usando el módulo "pickle" con el 
-    nombre y extensión "all_params.dict", este archivo deberá estar ubicado en el mismo directorio 
-    donde se encuentra  el archivo actual: hw_digit_recognizer.py. El autograder validará que este 
-    archivo esté presente y tendra las claves correctas, pero la revisión de la precisión se hará por 
-    el docente después de la entrega. La estructura del archivo será la siguiente:
+        donde los signos <?> son sustituidos por arreglos de numpy con los valores respectivos. El valor de 
+        L será elegido por el estudiante mediante experimentación. El segundo elemento a retornar es una 
+        lista con los costos obtenidos durante el entrenamiento cada 100 iteraciones.
 
-    {
-      "model_params": { "W1": ?, "b1": ?, ... , "WL": ?, "bL": ?},
-      "layer_dims": [30, ..., 10],  
-      "learning_rate": 0.001,
-      "num_iterations": 1500,
-      "costs": [0.2356, 0.1945, ... 0.00345]
-    }
+        Por razones de eficiencia el autograder revisará su programa usando un dataset más pequeño que el 
+        que se proporciona (usted puede hacer lo mismo para sus pruebas iniciales). Pero una vez entregado 
+        su proyecto se harán pruebas con el dataset completo, por lo que el diccionario que retorna este 
+        método con los resultados del entrenamiento con una precisión mayor al 95% en los datos de prueba 
+        debe ser entregado junto con este archivo completado.
 
-    <model_params>, es un diccionario que contiene los valores de las L * 2  matrices de parámetros del 
-    modelo (numpy array) desde W1 y b1, hasta WL y bL, el valor de L será elegido por el estudiante.
-    <layer_dims>, es una lista con las dimensiones de las L+1 capas del modelo, incluyendo la capa de 
-    entrada.
-    <learning_rate>, el valor del ritmo de entrenamiento.
-    <num_iterations>, el número de iteraciones que se usó.
-    <costs>, una lista con los costos obtenidos cada 100 iteraciones.
-    """
-    pass
+        Para entregar dicho diccionario deberá guardarlo como un archivo usando el módulo "pickle" con el 
+        nombre y extensión "all_params.dict", este archivo deberá estar ubicado en el mismo directorio 
+        donde se encuentra  el archivo actual: hw_digit_recognizer.py. El autograder validará que este 
+        archivo esté presente y tendra las claves correctas, pero la revisión de la precisión se hará por 
+        el docente después de la entrega. La estructura del archivo será la siguiente:
 
-  def predict(self, X, model_params):
-    """
-    Retorna una matriz de predicciones de <(1,m)> con valores entre 0 y 9 que representan las etiquetas 
-    para el dataset X de tamaño <(n,m)>.
+        {
+          "model_params": { "W1": ?, "b1": ?, ... , "WL": ?, "bL": ?},
+          "layer_dims": [30, ..., 10],  
+          "learning_rate": 0.001,
+          "num_iterations": 1500,
+          "costs": [0.2356, 0.1945, ... 0.00345]
+        }
 
-    <model_params> contiene un diccionario con los parámetros <w> y <b> de cada uno de los 
-    clasificadores tal como se explica en la documentación del método <train_model>.
-    """
-    pass
+        <model_params>, es un diccionario que contiene los valores de las L * 2  matrices de parámetros del 
+        modelo (numpy array) desde W1 y b1, hasta WL y bL, el valor de L será elegido por el estudiante.
+        <layer_dims>, es una lista con las dimensiones de las L+1 capas del modelo, incluyendo la capa de 
+        entrada.
+        <learning_rate>, el valor del ritmo de entrenamiento.
+        <num_iterations>, el número de iteraciones que se usó.
+        <costs>, una lista con los costos obtenidos cada 100 iteraciones.
+        """
+        pass
 
-  def get_datasets(self):
-    """Retorna un diccionario con los datasets preprocesados con los datos y 
-    dimensiones que se usaron para el entrenamiento
-    
-    d = { "X_train": X_train,
-    "X_test": X_test,
-    "Y_train": Y_train,
-    "Y_test": Y_test
-    }
-    """
+    def predict(self, X, model_params):
+        """
+        Retorna una matriz de predicciones de <(1,m)> con valores entre 0 y 9 que representan las etiquetas 
+        para el dataset X de tamaño <(n,m)>.
 
-    d = {
-      "X_train": self.X_train,
-      "X_test": self.X_test,
-      "Y_train": self.Y_train,
-      "Y_test": self.Y_test
-    }
-    return d
-    
-    pass
+        <model_params> contiene un diccionario con los parámetros <w> y <b> de cada uno de los 
+        clasificadores tal como se explica en la documentación del método <train_model>.
+        """
+        pass
+
+    def get_datasets(self):
+        """Retorna un diccionario con los datasets preprocesados con los datos y 
+        dimensiones que se usaron para el entrenamiento
+
+        d = { "X_train": X_train,
+        "X_test": X_test,
+        "Y_train": Y_train,
+        "Y_test": Y_test
+        }
+        """
+
+        d = {
+            "X_train": self.X_train,
+            "X_test": self.X_test,
+            "Y_train": self.Y_train,
+            "Y_test": self.Y_test
+        }
+        return d
+
+        pass
