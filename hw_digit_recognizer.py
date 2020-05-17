@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class HWDigitRecognizer:
 
@@ -16,8 +17,24 @@ class HWDigitRecognizer:
     y_train_len = len(train_file.label)
     y_test_len = len(test_file.label)
     
-    y_train = (train_file.label.to_numpy()).reshape(1, y_train_len)
-    y_test = (test_file.label.to_numpy()).reshape(1, y_test_len)
+    y_train_tmp = train_file.label.to_numpy()
+    y_test_tmp = test_file.label.to_numpy()
+
+    y_train = []
+    y_test = []
+
+    for i in range(y_train_len):
+      a = np.zeros(10)
+      a[y_train_tmp[i]] = 1
+      y_train.append(a)
+
+    for i in range(y_test_len):
+      a = np.zeros(10)
+      a[y_test_tmp[i]] = 1
+      y_test.append(a)
+
+    y_train = np.asanyarray(y_train).T
+    y_test = np.asanyarray(y_test).T
 
     x_train = train_file.drop('label', axis=1).to_numpy().T
     x_test = test_file.drop('label', axis=1).to_numpy().T
