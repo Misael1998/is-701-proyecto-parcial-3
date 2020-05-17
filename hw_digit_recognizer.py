@@ -13,9 +13,6 @@ class HWDigitRecognizer:
     """
     train_file = pd.read_csv(train_filename)
     test_file = pd.read_csv(test_filename)
-
-    y_train_len = len(train_file.label)
-    y_test_len = len(test_file.label)
     
     y_train_tmp = train_file.label.to_numpy()
     y_test_tmp = test_file.label.to_numpy()
@@ -23,14 +20,14 @@ class HWDigitRecognizer:
     y_train = []
     y_test = []
 
-    for i in range(y_train_len):
+    for i in y_train_tmp:
       a = np.zeros(10)
-      a[y_train_tmp[i]] = 1
+      a[i] = 1
       y_train.append(a)
 
-    for i in range(y_test_len):
+    for i in y_test_tmp:
       a = np.zeros(10)
-      a[y_test_tmp[i]] = 1
+      a[i] = 1
       y_test.append(a)
 
     y_train = np.asanyarray(y_train).T
