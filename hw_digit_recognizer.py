@@ -94,7 +94,36 @@ class HWDigitRecognizer:
         <num_iterations>, el número de iteraciones que se usó.
         <costs>, una lista con los costos obtenidos cada 100 iteraciones.
         """
-        pass
+
+        dict_params = {}
+        params = {}
+        costs = []
+        np.random.seed(1)
+        layer_dims = [784, 600, 7, 2, 3]
+        num_iterations = 2500
+        learning_rate = 0.0075
+        print_cost=True
+
+        params = initialize_parameters_deep(layer_dims)
+
+        X = self.X_train
+        Y = self.Y_train
+
+        for i in range(0, num_iterations):
+            AL, caches = L_model_forward(X, params)
+
+            cost = compute_cost(AL, Y)
+
+            grads = L_model_backward(AL, Y, caches)
+
+            params = update_parameters(params, grads, learning_rate)
+
+            if print_cost and i % 100 == 0:
+                print ("Cost after iteration %i: %f" %(i, cost))
+            if print_cost and i % 100 == 0:
+                costs.append(cost)
+
+        return params, dict_params
 
     def predict(self, X, model_params):
         """
@@ -128,14 +157,17 @@ class HWDigitRecognizer:
 # Funciones de ayuda:
 
 def sigmoid(z):
+
     s = 1/(1 + np.exp(-z))
     return s
 
 def relu(x):
+
     m = np.maximum(0,x)
     return m
 
 def softmax(x):
+
     expo = np.exp(x)
     expo_sum = np.sum(expo)
     r = expo/expo_sum
@@ -202,6 +234,79 @@ def L_model_forward(X, parameters):
 
     return AL, caches
 
+def compute_cost(AL, Y):
+
+    m = Y.shape[1]
+    cost = -1/m*np.sum(Y*np.log(AL)+(1-Y)*np.log(1-AL))
+    cost = np.squeeze(cost)
+    assert(cost.shape == ())
+
+    return cost
+
+def linear_bacward(dZ, cache):
+
+    Z, A_prev, W = cachem = A_prev.shape[1]
+    dW = 1/m * dZ.dot(A_prev.T)
+    db = 1/m * np.sum(dZ, axis=1, keepdims=True)
+    dA_prev = (W.T).dot(dZ)
+
+    assert (dA_prev.shape == A_prev.shape)
+    assert (dW.shape == W.shape)
+
+    return dA_prev, dW, db
+
+
+def linear_activation_backward(dA, cache, activation):
+
+    Z, A_prev, W = cache
+    
+    if activation == "relu":
+        dZ = np.array(dA, copy=True)
+        dZ[Z <= 0] = 0
+        
+    elif activation == "sigmoid":
+        s = sigmoid(Z)
+        dZ = dA * s * (1 - s)
+        
+    dA_prev, dW, db = linear_backward(dZ, cache)
+    
+    return dA_prev, dW, db
+
+
+def L_model_backward(AL, Y, caches):
+
+    grads = {}
+    L = len(caches) # the number of layers
+    m = AL.shape[1]
+    Y = Y.reshape(AL.shape) # after this line, Y is the same shape as AL
+    
+    dAL =-(Y/AL)+(1-Y)/(1-AL)
+
+    current_cache=caches[-1]
+    grads["dA" + str(L-1)], grads["dW" + str(L)], grads["db" + str(L)] = \
+             linear_activation_backward(dAL, current_cache, "sigmoid")
+    
+    
+    for l in reversed(range(L-1)):
+        current_cache = caches[l]
+        dA_prev, dW, db = \
+             linear_activation_backward(grads["dA" + str(l+1)], current_cache, "relu")
+        grads["dA" + str(l)] = dA_prev
+        grads["dW" + str(l + 1)] = dW
+        grads["db" + str(l + 1)] = db
+
+    return grads
+
+def update_parameters(parameters, grads, learning_rate):
+    
+    L = len(parameters) // 2 # number of layers in the neural network
+
+    for l in range(L):
+        parameters["W" + str(l+1)] -= learning_rate * grads["dW" + str(l+1)]
+        parameters["b" + str(l+1)] -= learning_rate * grads["db" + str(l+1)]
+    
+    return parameters
+
 #Pruebas:
 
 train_f = pd.read_csv('autograder_data/mnist_train_0.01sampled.csv')
@@ -211,12 +316,13 @@ X = x_temp/255
 n_0 = X.shape[0]
 n_1 = X.shape[1]
 
-parameters = initialize_parameters_deep([784, 600, 7, 2, 3])
+#parameters = initialize_parameters_deep([784, 600, 7, 2, 3])
+parameters = initialize_parameters_deep([5, 4, 7, 2, 3])
 
-ALP, caches = L_model_forward(X, parameters)
-print("AL = " + str(ALP))
-print("Length of caches list = " + str(len(caches)))
+#ALP, caches = L_model_forward(X, parameters)
+#print("AL = " + str(ALP))
+#print("Length of caches list = " + str(len(caches)))
 
 # print(X.shape)
-# print(parameters["W1"].shape)
+print(parameters)
 #print(X.shape[1])
