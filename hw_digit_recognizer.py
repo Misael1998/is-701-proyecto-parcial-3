@@ -127,6 +127,19 @@ class HWDigitRecognizer:
 
 # Funciones de ayuda:
 
+def sigmoid(z):
+    s = 1/(1 + np.exp(-z))
+    return s
+
+def relu(x):
+    m = np.maximum(0,x)
+    return m
+
+def softmax(x):
+    expo = np.exp(x)
+    expo_sum = np.sum(expo)
+    r = expo/expo_sum
+    return r
 
 def initialize_parameters_deep(layer_dims):
 
@@ -146,7 +159,7 @@ def initialize_parameters_deep(layer_dims):
 def linear_forward(A, W, b):
 
     Z = W.dot(A) + b
-    assert(Z.sahpe == (W.shape[0], A.shape[1]))
+    assert(Z.shape == (W.shape[0], A.shape[1]))
 
     return Z
 
@@ -164,7 +177,7 @@ def linear_activation_forward(A_prev, W, b, activation):
     assert(A.shape == (W.shape[0], A_prev.shape[1]))
     cache = (Z, A_prev, W)
 
-    return a, cache
+    return A, cache
 
 def L_model_forward(X, parameters):
 
@@ -185,7 +198,7 @@ def L_model_forward(X, parameters):
     AL, cache = linear_activation_forward(A_prev, W, b, "sigmoid")
     caches.append(cache)
 
-    assert(AL.sahpe == (1,X.sahpe[1]))
+    assert(AL.shape == (1, X.shape[1]))
 
     return AL, caches
 
@@ -198,12 +211,12 @@ X = x_temp/255
 n_0 = X.shape[0]
 n_1 = X.shape[1]
 
-parameters = initialize_parameters_deep([n_0,n_1])
+parameters = initialize_parameters_deep([784, 600, 7, 2, 3])
 
-#ALP, caches = L_model_forward(X, parameters)
-#print("AL = " + str(ALP))
-#print("Length of caches list = " + str(len(caches)))
+ALP, caches = L_model_forward(X, parameters)
+print("AL = " + str(ALP))
+print("Length of caches list = " + str(len(caches)))
 
 # print(X.shape)
 # print(parameters["W1"].shape)
-print(n_2)
+#print(X.shape[1])
