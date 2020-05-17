@@ -45,7 +45,7 @@ class HWDigitRecognizer:
         self.Y_train = y_train
         self.Y_test = y_test
 
-    def train_model(self, X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000):
+    def train_model(self):
         """
         Entrena complementamente una red neuronal con múltiples capas, utilizando 
         la función de activación RELU en las primeras L-1 capas y la función Softmax
@@ -94,45 +94,7 @@ class HWDigitRecognizer:
         <num_iterations>, el número de iteraciones que se usó.
         <costs>, una lista con los costos obtenidos cada 100 iteraciones.
         """
-
-        np.random.seed(1)
-    costs = []                         # keep track of cost
-
-    # Parameters initialization. (≈ 1 line of code)
-    ### START CODE HERE ###
-    parameters = initialize_parameters_deep(layers_dims)
-    ### END CODE HERE ###
-
-    # Loop (gradient descent)
-    for i in range(0, num_iterations):
-
-        # Forward propagation: [LINEAR -> RELU]*(L-1) -> LINEAR -> SIGMOID.
-        # START CODE HERE ### (≈ 1 line of code)
-        AL, caches = L_model_forward(X, parameters)
-        ### END CODE HERE ###
-
-        # Compute cost.
-        # START CODE HERE ### (≈ 1 line of code)
-        cost = compute_cost(AL, Y)
-        ### END CODE HERE ###
-
-        # Backward propagation.
-        # START CODE HERE ### (≈ 1 line of code)
-        grads = L_model_backward(AL, Y, caches)
-        ### END CODE HERE ###
-
-        # Update parameters.
-        # START CODE HERE ### (≈ 1 line of code)
-        parameters = update_parameters(parameters, grads, learning_rate)
-
-        if print_cost and i % 100 == 0:
-            print("Cost after iteration %i: %f" % (i, cost))
-        if print_cost and i % 100 == 0:
-            costs.append(cost)
-
-    return parameters
-
-    # pass
+        pass
 
     def predict(self, X, model_params):
         """
@@ -142,52 +104,7 @@ class HWDigitRecognizer:
         <model_params> contiene un diccionario con los parámetros <w> y <b> de cada 
         uno de los clasificadores tal como se explica en la documentación del método <train_model>.
         """
-
-        predictions = []
-
-    def local_predict(w_n, b_n, X_n):
-        m = X_n.shape[1]
-        Y_prediction = np.zeros((1, m))
-        w_n = w_n.reshape(X_n.shape[0], 1)
-
-        A = self.sigmoid(w_n.T.dot(X_n) + b_n)
-
-        for i in range(A.shape[1]):
-            Y_prediction[0, i] = 0 if (A[0, i] <= 0.5) else 1
-
-        assert(Y_prediction.shape == (1, m))
-        return Y_prediction
-
-    for i in range(len(class_pairs)):
-        params_local = params[frozenset(class_pairs[i])]
-        w = params_local[0]
-        b = params_local[1]
-
-        prediction = local_predict(w, b, X)
-        predictions.append(prediction[0])
-
-    predictions = np.array(predictions)
-    predictions = predictions.T
-
-    arr = []
-    np.random.seed(1)
-    for i in range(predictions.shape[0]):
-        nm = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        for k in range(predictions.shape[1]):
-            l = predictions[i, k]
-            tmp_l = int(l)
-            nm[class_pairs[k][tmp_l]] += 1
-        max_value = self.get_max(nm)
-        if len(max_value) > 1:
-            arr.append(max_value[np.random.randint(len(max_value))])
-        else:
-            arr.append(max_value[0])
-
-    tmo = np.asanyarray(arr)
-    tmo = tmo.reshape(1, tmo.shape[0])
-    return tmo
-
-    pass
+        pass
 
     def get_datasets(self):
         """Retorna un diccionario con los datasets preprocesados con los datos y 
