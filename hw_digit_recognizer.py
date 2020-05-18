@@ -102,10 +102,22 @@ class HWDigitRecognizer:
 
         layer_dim = [X.shape[0], 100, 100, 20, 10]
         num_iterations = 2500
+        learning_rate = 0.01
         parameters = initialize_parameters_deep(layer_dim)
 
         for i in range(0, num_iterations):
             AL, caches = L_model_forward(X, parameters)
+
+            cost = compute_cost(AL, Y)
+
+            grads = L_model_backward(AL, Y, caches)
+
+            parameters = update_parameters(parameters, grads, learning_rate)
+
+            if i % 100 == 0:
+                print("Cost after iteration %i: %f" % (i, cost))
+            if i % 100 == 0:
+                costs.append(cost)
 
         print('all ok')
 
