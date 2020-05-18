@@ -174,7 +174,7 @@ def compute_cost(AL, Y):
 
     # Compute loss from aL and y.
     # START CODE HERE ### (≈ 1 lines of code)
-    cost = np.mean(Y*np.log(AL - np.exp(-8)))
+    cost = np.mean(Y*np.log(AL + np.exp(-8)))
     ### END CODE HERE ###
 
     # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).

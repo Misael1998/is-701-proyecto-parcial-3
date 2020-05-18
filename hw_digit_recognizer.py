@@ -32,8 +32,8 @@ class HWDigitRecognizer:
             a[i] = 1
             y_test.append(a)
 
-        y_train = np.asanyarray(y_train).T
-        y_test = np.asanyarray(y_test).T
+        y_train = np.asarray(y_train).T
+        y_test = np.asarray(y_test).T
 
         x_train = train_file.drop('label', axis=1).to_numpy().T
         x_test = test_file.drop('label', axis=1).to_numpy().T
@@ -102,7 +102,7 @@ class HWDigitRecognizer:
 
         layer_dim = [X.shape[0], 100, 100, 20, 10]
         num_iterations = 2500
-        learning_rate = 0.01
+        learning_rate = 0.007
         parameters = initialize_parameters_deep(layer_dim)
 
         for i in range(0, num_iterations):
