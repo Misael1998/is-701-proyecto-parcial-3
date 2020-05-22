@@ -103,9 +103,9 @@ class HWDigitRecognizer:
         X = ds["X_train"]
         Y = ds["Y_train"]
 
-        layer_dim = [X.shape[0], 100, 100, 20, 10]
-        num_iterations = 2500
-        learning_rate = 0.007
+        layer_dim = [X.shape[0], 100, 100, 10]
+        num_iterations = 3000
+        learning_rate = 0.05
         parameters = initialize_parameters_deep(layer_dim)
 
         for i in range(0, num_iterations):
@@ -132,10 +132,11 @@ class HWDigitRecognizer:
         params_dict["num_iterations"] = num_iterations
         params_dict["costs"] = costs
 
-        file_name = 'all_params.dict'
-        out_file = open(file_name, 'wb')
-        pickle.dump(params_dict, out_file)
-        out_file.close()
+        # file_name = 'all_params.dict'
+        # out_file = open(file_name, 'wb')
+        # pickle.dump(params_dict, out_file)
+        # out_file.close()
+        return parameters, costs
 
     def predict(self, X, model_params):
         """
